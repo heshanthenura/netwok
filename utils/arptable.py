@@ -18,6 +18,6 @@ def get_arp_table(target_ip):
     
     return arp_table
 
-arp_table = get_arp_table("172.28.0.0/19")  # Scan the local network (adjust the IP range if needed)
-for entry in arp_table:
-    print(f"IP Address: {entry['IP']} | MAC Address: {entry['MAC']}")
+# arp_table = get_arp_table("192.168.1.101/24")  
+# for entry in arp_table:
+#     print(f"IP Address: {entry['IP']} | MAC Address: {entry['MAC']}")
