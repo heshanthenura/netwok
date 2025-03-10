@@ -17,12 +17,12 @@ if args.help:
     print("NETWOK - Cook The Network")
     print("-------------------------")
     print("Heshan Thenura Kariyawasam")
-    print("https://github.com/heshanthenura")
+    print("https://github.com/heshanthenura/netwok")
     print()
     print("Usage:")
     print("  -ipd, --ip_details                                Details About IP Address")
+    print("  -at,  --arp_table <IP>/<CIDR>                     ARP Table")
     exit()
-
 
 if args.ip_details:
     local_ip, subnet_mask, ip_range, public_ip, cidr = get_ips()
