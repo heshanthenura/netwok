@@ -25,7 +25,7 @@ diagnose_report() {
     echo "" | tee -a "$filename"
 
     echo "hostname: $(hostname)" | tee -a "$filename"
-    echo "os: $(uname -s)" | tee -a "$filename"
+    echo "os: $os_type" | tee -a "$filename"
     echo "kernel: $(uname -r)" | tee -a "$filename"
     echo "uptime: $(uptime)" | tee -a "$filename"
     echo "date: $(date)" | tee -a "$filename"
@@ -35,12 +35,18 @@ diagnose_report() {
     echo "interface details" | tee -a "$filename"
     echo "" | tee -a "$filename"
 
+    ### 1. Network interfaces
+    echo "network interfaces:" | tee -a "$filename"
     if [[ "$os_type" == "Linux" ]]; then
-        echo "network interfaces:" | tee -a "$filename"
         ip -br link show | sed 's/^/    /' | tee -a "$filename"
+    elif [[ "$os_type" == "Darwin" ]]; then
+        ifconfig -l | tr ' ' '\n' | sed 's/^/    /' | tee -a "$filename"
+    fi
 
-        echo "" | tee -a "$filename"
-        echo "ip addresses:" | tee -a "$filename"
+    ### 2. IP addresses
+    echo "" | tee -a "$filename"
+    echo "ip addresses:" | tee -a "$filename"
+    if [[ "$os_type" == "Linux" ]]; then
         ip -o addr show | awk '
         {
             iface = $2;
@@ -50,9 +56,19 @@ diagnose_report() {
                 printf "    %s (IPv6): %s\n", iface, $4
             }
         }' | tee -a "$filename"
+    elif [[ "$os_type" == "Darwin" ]]; then
+        for iface in $(ifconfig -l); do
+            ipv4=$(ipconfig getifaddr $iface 2>/dev/null)
+            ipv6=$(ifconfig $iface | awk '/inet6/ && !/fe80/ {print $2}' | head -n1)
+            [[ $ipv4 ]] && echo "    $iface (IPv4): $ipv4" | tee -a "$filename"
+            [[ $ipv6 ]] && echo "    $iface (IPv6): $ipv6" | tee -a "$filename"
+        done
+    fi
 
-        echo "" | tee -a "$filename"
-        echo "tx/rx statistics & errors:" | tee -a "$filename"
+    ### 3. TX/RX statistics
+    echo "" | tee -a "$filename"
+    echo "tx/rx statistics & errors:" | tee -a "$filename"
+    if [[ "$os_type" == "Linux" ]]; then
         for iface in /sys/class/net/*; do
             iface=$(basename "$iface")
             echo "    $iface:" | tee -a "$filename"
@@ -65,9 +81,14 @@ diagnose_report() {
             echo "        RX Errors : $rx_errors" | tee -a "$filename"
             echo "        TX Errors : $tx_errors" | tee -a "$filename"
         done
+    elif [[ "$os_type" == "Darwin" ]]; then
+        netstat -ib | awk 'NR==1 || $1 ~ /^[a-z0-9]+$/ { print }' | sed 's/^/    /' | tee -a "$filename"
+    fi
 
-        echo "" | tee -a "$filename"
-        echo "interface speed & MTU:" | tee -a "$filename"
+    ### 4. Interface speed & MTU
+    echo "" | tee -a "$filename"
+    echo "interface speed & MTU:" | tee -a "$filename"
+    if [[ "$os_type" == "Linux" ]]; then
         for iface in /sys/class/net/*; do
             iface=$(basename "$iface")
             echo "    $iface:" | tee -a "$filename"
@@ -81,49 +102,27 @@ diagnose_report() {
             echo "        MTU   : $mtu" | tee -a "$filename"
             echo "        Speed : $speed" | tee -a "$filename"
         done
-
-        echo "" | tee -a "$filename"
-        echo "default interface & IP address:" | tee -a "$filename"
-        default_iface=$(ip route | awk '/default/ {print $5}')
-        ip_addr=$(ip -o -4 addr show dev "$default_iface" | awk '{print $4}')
-        echo "    Interface : $default_iface" | tee -a "$filename"
-        echo "    IPv4 Addr : $ip_addr" | tee -a "$filename"
-
     elif [[ "$os_type" == "Darwin" ]]; then
-        echo "network interfaces:" | tee -a "$filename"
-        ifconfig -l | tr ' ' '\n' | sed 's/^/    /' | tee -a "$filename"
-
-        echo "" | tee -a "$filename"
-        echo "ip addresses:" | tee -a "$filename"
-        for iface in $(ifconfig -l); do
-            ipv4=$(ipconfig getifaddr $iface 2>/dev/null)
-            ipv6=$(ifconfig $iface | awk '/inet6/ && !/fe80/ {print $2}' | head -n1)
-            [[ $ipv4 ]] && echo "    $iface (IPv4): $ipv4" | tee -a "$filename"
-            [[ $ipv6 ]] && echo "    $iface (IPv6): $ipv6" | tee -a "$filename"
-        done
-
-        echo "" | tee -a "$filename"
-        echo "tx/rx statistics & errors:" | tee -a "$filename"
-        netstat -ib | awk 'NR==1 || $1 ~ /^[a-z0-9]+$/ { print }' | sed 's/^/    /' | tee -a "$filename"
-
-        echo "" | tee -a "$filename"
-        echo "interface speed & MTU:" | tee -a "$filename"
         for iface in $(ifconfig -l); do
             echo "    $iface:" | tee -a "$filename"
             mtu=$(ifconfig $iface | awk '/mtu/ {print $NF}')
             echo "        MTU   : $mtu" | tee -a "$filename"
             echo "        Speed : Not Available (macOS limitation)" | tee -a "$filename"
         done
+    fi
 
-        echo "" | tee -a "$filename"
-        echo "default interface & IP address:" | tee -a "$filename"
+    ### 5. Default interface & IP
+    echo "" | tee -a "$filename"
+    echo "default interface & IP address:" | tee -a "$filename"
+    if [[ "$os_type" == "Linux" ]]; then
+        default_iface=$(ip route | awk '/default/ {print $5}')
+        ip_addr=$(ip -o -4 addr show dev "$default_iface" | awk '{print $4}')
+    elif [[ "$os_type" == "Darwin" ]]; then
         default_iface=$(route -n get default | awk '/interface:/ {print $2}')
         ip_addr=$(ipconfig getifaddr "$default_iface" 2>/dev/null)
-        echo "    Interface : $default_iface" | tee -a "$filename"
-        echo "    IPv4 Addr : $ip_addr" | tee -a "$filename"
-    else
-        echo "Unsupported OS: $os_type" | tee -a "$filename"
     fi
+    echo "    Interface : $default_iface" | tee -a "$filename"
+    echo "    IPv4 Addr : $ip_addr" | tee -a "$filename"
 }
 
 diagnose_report
