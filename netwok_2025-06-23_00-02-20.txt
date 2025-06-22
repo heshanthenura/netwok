@@ -1,0 +1,86 @@
+system identity
+
+hostname: heshanthenura
+os: Linux
+kernel: 6.11.2-amd64
+uptime:  00:02:20 up 11:29,  4 users,  load average: 0.04, 0.04, 0.00
+date: Mon Jun 23 12:02:20 AM +0530 2025
+current user: heshanthenura
+
+interface details
+
+network interfaces:
+    lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+    eth0             DOWN           e8:6a:64:3e:f1:a3 <NO-CARRIER,BROADCAST,MULTICAST,UP> 
+    wlan0            UP             38:ba:f8:e5:98:e0 <BROADCAST,MULTICAST,UP,LOWER_UP> 
+    docker0          DOWN           02:42:bc:6d:9d:98 <NO-CARRIER,BROADCAST,MULTICAST,UP> 
+    br-816f17f97ae1  DOWN           02:42:76:c7:c5:37 <NO-CARRIER,BROADCAST,MULTICAST,UP> 
+    br-df4fcfee96fe  DOWN           02:42:d0:bc:e6:af <NO-CARRIER,BROADCAST,MULTICAST,UP> 
+
+ip addresses:
+    lo (IPv4): 127.0.0.1/8
+    lo (IPv6): ::1/128
+    wlan0 (IPv4): 192.168.1.101/24
+    wlan0 (IPv6): 2402:d000:a400:646c:5001:d977:88dc:3/128
+    wlan0 (IPv6): 2402:d000:a400:646c:525c:74a:e5c:37aa/64
+    wlan0 (IPv6): 2402:d000:a400:646c:3aba:f8ff:fee5:98e0/64
+    wlan0 (IPv6): fe80::3aba:f8ff:fee5:98e0/64
+    docker0 (IPv4): 172.17.0.1/16
+    br-816f17f97ae1 (IPv4): 172.19.0.1/16
+    br-df4fcfee96fe (IPv4): 172.18.0.1/16
+
+tx/rx statistics & errors:
+    br-816f17f97ae1:
+        RX Bytes  : 0
+        TX Bytes  : 0
+        RX Errors : 0
+        TX Errors : 0
+    br-df4fcfee96fe:
+        RX Bytes  : 0
+        TX Bytes  : 0
+        RX Errors : 0
+        TX Errors : 0
+    docker0:
+        RX Bytes  : 0
+        TX Bytes  : 0
+        RX Errors : 0
+        TX Errors : 0
+    eth0:
+        RX Bytes  : 0
+        TX Bytes  : 0
+        RX Errors : 0
+        TX Errors : 0
+    lo:
+        RX Bytes  : 150245209
+        TX Bytes  : 150245209
+        RX Errors : 0
+        TX Errors : 0
+    wlan0:
+        RX Bytes  : 290359360
+        TX Bytes  : 24727233
+        RX Errors : 0
+        TX Errors : 0
+
+interface speed & MTU:
+    br-816f17f97ae1:
+        MTU   : 1500
+        Speed : Unknown/Not Reported
+    br-df4fcfee96fe:
+        MTU   : 1500
+        Speed : Unknown/Not Reported
+    docker0:
+        MTU   : 1500
+        Speed : Unknown/Not Reported
+    eth0:
+        MTU   : 1500
+        Speed : Unknown/Not Reported
+    lo:
+        MTU   : 65536
+        Speed : Unknown/Not Reported
+    wlan0:
+        MTU   : 1500
+        Speed : Unknown/Not Reported
+
+default interface & IP address:
+    Interface : wlan0
+    IPv4 Addr : 192.168.1.101/24
