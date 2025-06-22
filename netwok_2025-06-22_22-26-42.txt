@@ -1,0 +1,8 @@
+System Identity 
+
+hostname: heshanthenura
+os: Kali GNU/Linux Rolling
+kernel: 6.11.2-amd64
+uptime:  22:26:42 up  9:53,  4 users,  load average: 0.04, 0.03, 0.00
+date: Sun Jun 22 10:26:42 PM +0530 2025
+current user: heshanthenura
