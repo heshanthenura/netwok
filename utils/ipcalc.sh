@@ -92,21 +92,21 @@ calculate_cidr_info() {
     usable_addresses=$(( total_addresses - 2 ))
   fi
 
-  echo ""
-  echo "CIDR Information:"
-  echo "-----------------"
-  echo "IP Address           : $ip"
-  echo "Class                : $class"
-  echo "Subnet Mask          : $netmask"
-  echo "Netbits (Prefix)     : $prefix"
-  echo "Hostbits             : $hostbits"
-  echo "Network Address      : $(int_to_ip $network_int)"
-  echo "Broadcast Address    : $(int_to_ip $broadcast_int)"
-  echo "First Usable IP      : $(int_to_ip $first_usable_int)"
-  echo "Last Usable IP       : $(int_to_ip $last_usable_int)"
-  echo "Total Addresses      : $total_addresses"
-  echo "Usable Addresses     : $usable_addresses"
-  echo ""
+  echo "" | tee -a "$filename"
+  echo "CIDR Information:" | tee -a "$filename"
+  echo "-----------------" | tee -a "$filename"
+  echo "IP Address           : $ip" | tee -a "$filename"
+  echo "Class                : $class" | tee -a "$filename"
+  echo "Subnet Mask          : $netmask" | tee -a "$filename"
+  echo "Netbits (Prefix)     : $prefix" | tee -a "$filename"
+  echo "Hostbits             : $hostbits" | tee -a "$filename"
+  echo "Network Address      : $(int_to_ip $network_int)" | tee -a "$filename"
+  echo "Broadcast Address    : $(int_to_ip $broadcast_int)" | tee -a "$filename"
+  echo "First Usable IP      : $(int_to_ip $first_usable_int)" | tee -a "$filename"
+  echo "Last Usable IP       : $(int_to_ip $last_usable_int)" | tee -a "$filename"
+  echo "Total Addresses      : $total_addresses" | tee -a "$filename"
+  echo "Usable Addresses     : $usable_addresses" | tee -a "$filename"
+  echo "" | tee -a "$filename"
 }
 
 show_menu() {

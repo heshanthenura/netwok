@@ -19,4 +19,4 @@ touch "logs/$filename"
 echo "log available: $(pwd)/logs/$filename"
 echo ""
 
-source utils/netwok.sh "$filename"
+source utils/netwok.sh "logs/$filename"
